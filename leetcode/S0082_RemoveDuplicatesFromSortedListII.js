@@ -1,23 +1,24 @@
-//2020.05.24 我自己并没有做出来，需要再熟练这种方法
-/*2020-12-17 涉及到的节点比较复杂而已，逻辑并不复杂：我也想到了需要考虑三个或者更多节点，
-没想到可以抽象成：一个指针节点，一个开始一个终止节点来确定重复的节点*/
-/* 2021-1-10 还是困在了想跟203题一样的做法，往后考虑pointer.next.next节点，并不能做出来；还是这种设开始终止的办法好 */
-//2021-5-27 我想到了记录下来第一个节点的值，然后后面的跟他比较，消消乐，一直到不相等了再往后挪，但是实现不了，太麻烦；还是解法这种思路清晰，其实大差不差
+//2020.05.24 |12-17|2021-1-10 |5-27|7-12
+/* 跟#203题的异同点： 
+ 异 --- 不留下重复节点，需要一直往后面找pointer.next.next节点，然后越过去， 比较好的办法是设计一个指针节点，一个开始一个终止节点来确定重复的节点
+ 同 --- 判断好后重复节点/不重复节点，然后挪节点，同#203题的处理方法一致
+*/
 var deleteDuplicates = function(head) {
-    var newNode = new ListNode(0);   //即使开头是0也不冲突
-    newNode.next = head;
-    var cursorNode = newNode;
-    while (cursorNode.next != null) {  //注意这里是.next
-        var startNode = cursorNode.next;
-        var endNode = startNode;
-        while (endNode.next != null && endNode.next.val == startNode.val) {
-            endNode = endNode.next;
+    var dummyNode = new ListNode(0,head);
+    var pointer = dummyNode;
+
+    while (pointer.next != null) {
+        var start = pointer.next;  // 1. 重复的第一个节点
+        var end = start;
+        while (end.next != null && end.next.val == start.val) {  //找到重复的最后一个节点
+            end = end.next;
         }
-        if (startNode == endNode) {  //是否是同一个节点,注意这里是节点相同，不仅仅是val相同，也就是只有一个数，endNode没有变
-            cursorNode = startNode;
-        } else {
-            cursorNode.next = endNode.next;  // ??? 为什么不是cursorNode = endNode.next
+         // 2. 处理跳跃节点
+        if (start == end) {    //2.1无重复节点，也就是起始节点是同一个节点，注意这里是节点相同，不仅仅是val相同
+            pointer = pointer.next;
+        } else {               // 2.2 有重复节点时
+            pointer.next = end.next;  // //注意不是cursorNode = endNode.next ，其实这里思想和#203题还是一样的
         }
-    }       
-    return newNode.next;
+    }
+    return dummyNode.next;
 };
