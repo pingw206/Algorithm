@@ -3,7 +3,7 @@
 // 这个题区别于之前的遍历题方法是有返回值，用来处理null的情况，试着用没有返回值的处理方式写一下？ （不管有没有返回值，都会跳出一层递归）
 var invertTree = function(root) {
     if (root == null) {
-        return null;  //不再是return;
+        return null;  //不再是return; 也不是return [];
     }
     
     // 1: resolve two sub question，保证子问题都已经是反转树
